@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -29,8 +31,29 @@ print('No. of testing data: {0} (30%)'.format(df_test.shape[0]))
 root = Node()
 minimum_count = (5 * df_train.shape[0]) // 1000
 
+def find_entropy(df):
+    norm_vals = df['class'].value_counts(normalize=True)
+    entropy = norm_vals.apply(lambda x: x * math.log2(x)).sum() * (-1)
+    return entropy
+
 def create_node(node, df):
-    if (len(df['class'].unique().tolist()) > 1) and (df.shape[0] > minimum_count):
-        print(minimum_count)
+    entropy_class = find_entropy(df)
+    features = df.iloc[:,1:].columns.tolist()
+    info_gain_max = 0
+    splitting_feature = ''
+    for f in features:
+        print(f)
+        entropy_feature = 0
+        vals = df[f].unique().tolist()
+        for v in vals:
+            df_temp = df.loc[df[f] == v].reset_index(drop=True)
+            entropy_val = find_entropy(df_temp)
+            entropy_feature = entropy_feature + (entropy_val * (df[f].value_counts(normalize=True))[v])
+        info_gain = entropy_class - entropy_feature
+        if info_gain > info_gain_max:
+            info_gain_max = info_gain
+            splitting_feature = f
+    print('Max {0}'.format(splitting_feature))
+    node.split_on = splitting_feature
 
 create_node(root, df_train)
