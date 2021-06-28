@@ -1,5 +1,6 @@
 class Node:
-    def __init__(self, split_on='Root'):
+    def __init__(self, depth):
         self.class_of = {}
         self.is_leaf = True
-        self.split_on = split_on
+        self.depth = depth
+        self.split_on = ''
