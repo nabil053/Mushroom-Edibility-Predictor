@@ -75,8 +75,37 @@ def generate_tree(node, df):
             df_temp_next = df_temp.drop(columns=[node.split_on]).reset_index(drop=True)
             generate_tree(node.class_of[val], df_temp_next)
 
+def classify(row, node):
+    #print(node.split_on)
+    #print(row[node.split_on])
+    #print(node.class_of[row[node.split_on]])
+    if type(node) == type(node.class_of[row[node.split_on]]):
+        return classify(row, node.class_of[row[node.split_on]])
+    else:
+        return node.class_of[row[node.split_on]]
+
 #Generate the decision tree
 print('Generating tree...')
 generate_tree(root, df_train)
 print('Tree has been generated.')
 
+print('Testing...')
+#Running test on the test dataset to determine accuracy, precision and recall
+true_edible = 0
+false_edible = 0
+true_poisonous = 0
+false_poisonous = 0
+for i in range(df_test.shape[0]):
+    if (df_test['class'][i]) == classify(df_test.iloc[i,:], root):
+        if df_test['class'][i] == 'e':
+            true_edible = true_edible + 1
+        else:
+            true_poisonous = true_poisonous + 1
+    elif (df_test['class'][i] == 'e') and (classify(df_test.iloc[i,:], root) == 'p'):
+        false_poisonous = false_poisonous + 1
+    else:
+        false_edible = false_edible + 1
+
+print('Accuracy: {0}%'.format(((true_edible + true_poisonous) / df_test.shape[0]) * 100))
+print('Precision: {0}%'.format((true_edible / (true_edible + false_edible)) * 100))
+print('Recall: {0}%'.format((true_edible / (true_edible + false_poisonous)) * 100))
