@@ -5,10 +5,12 @@ import matplotlib.pyplot as plt
 from Node import Node
 
 #Read data from dataset and display data
+print('First 20 data')
 df = pd.read_csv('mushrooms.csv')
 print(df.head(20))
 
 #View each column and the number of their unique values
+print('Columns and their unique values:')
 for c in df.columns:
     print('{0} : {1}'.format(c, df[c].unique()))
 
