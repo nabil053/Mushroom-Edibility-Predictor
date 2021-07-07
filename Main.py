@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 from Node import Node
 
 #Read data from dataset and display data
-print('First 20 data')
+print('Loading data...')
 df = pd.read_csv('mushrooms.csv')
+print('First 20 data')
 print(df.head(20))
 
 #View each column and the number of their unique values
