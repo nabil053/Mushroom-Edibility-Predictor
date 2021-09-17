@@ -1,7 +1,5 @@
 import math
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from Node import Node
 
 #Read data from dataset and display data
@@ -79,9 +77,6 @@ def generate_tree(node, df):
             generate_tree(node.class_of[val], df_temp_next)
 
 def classify(row, node):
-    #print(node.split_on)
-    #print(row[node.split_on])
-    #print(node.class_of[row[node.split_on]])
     if type(node) == type(node.class_of[row[node.split_on]]):
         return classify(row, node.class_of[row[node.split_on]])
     else:
